@@ -32,7 +32,7 @@ public class BookDelete {
 		pstmt = conn.prepareStatement(query);
 		
 		//바인딩
-		pstmt.setInt(1, 3);
+		pstmt.setInt(1, 6);
 		
 		//실행
 		int count = pstmt.executeUpdate();	
