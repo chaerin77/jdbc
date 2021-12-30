@@ -1,4 +1,4 @@
-package com.javaex.ex05;
+package com.javaex.ex06;
 
 public class BookVo { //selectall인걸로만들기  Bookvo.  책정보+작가아이디 클래스
 	
@@ -16,6 +16,26 @@ public class BookVo { //selectall인걸로만들기  Bookvo.  책정보+작가�
 		
 	}
 	
+	
+	
+	public BookVo(String pubs, int authorId) {
+		super();
+		this.pubs = pubs;
+		this.authorId = authorId;
+	}
+
+
+
+	public BookVo(String title, String pubs, String pubdate, int authorId) {
+		super();
+		this.title = title;
+		this.pubs = pubs;
+		this.pubdate = pubdate;
+		this.authorId = authorId;
+	}
+
+
+
 	public BookVo(int bookId, String title, String pubs, String pubdate, int authorId, String authorName,
 			String authorDesc) {
 		super();

@@ -13,7 +13,14 @@ import java.util.List;
 
 public class AuthorDao { 
 	
-	//필드  이렇게 설계해놓으면은 비번이나 아이디 바뀌었을때 여기만 바꿔주면되겠지. 아까꺼였으면은 하나하나 다 찾아서 바꿔줘야했을거임
+	//필드
+	// 0. import java.sql.*;
+	private Connection conn = null;
+	private PreparedStatement pstmt = null;
+	private ResultSet rs = null;
+	
+	
+	//이렇게 설계해놓으면은 비번이나 아이디 바뀌었을때 여기만 바꿔주면되겠지. 아까꺼였으면은 하나하나 다 찾아서 바꿔줘야했을거임
 	private String driver = "oracle.jdbc.driver.OracleDriver"; //임의로 드라이버라고 변수이름정해줬음
 	private String url = "jdbc:oracle:thin:@localhost:1521:xe";
 	private String id = "webdb";
@@ -27,20 +34,57 @@ public class AuthorDao {
 	//메소드 gs
 	
     //메소드 일반
+	private void getConnection() {
+		
+		try {
+			// 1. JDBC 드라이버 (Oracle) 로딩
+			Class.forName(driver);
+			
+			// 2. Connection 얻어오기
+			conn = DriverManager.getConnection(url, id, pw);
+			
+		} catch (ClassNotFoundException e) {
+			System.out.println("error: 드라이버 로딩 실패 - " + e);
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}	
+	}
+				
+		       
+	private void close() {
+		// 5. 자원정리
+			try {
+				
+				if (rs != null) {
+				rs.close();
+				} 
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("error:" + e);
+			}
+		}
+		
+	
+	
 	public void authorInsert(AuthorVo authorVo) { 
 		
+		/*얘네 필드로빼기
 		// 0. import java.sql.*;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		//ResultSet rs = null;
-	try {
-		// 1. JDBC 드라이버 (Oracle) 로딩
-		Class.forName(driver);
+		//ResultSet rs = null;*/
 		
-		// 2. Connection 얻어오기
-		//String url = "jdbc:oracle:thin:@localhost:1521:xe"; 여기는 아예지워주기
-		conn = DriverManager.getConnection(url, id, pw);
-       
+		//getConnection(); //이걸 실행하면 1,2번(드라이버로딩/커넥션얻어오기)을 둘다 실행시키도록 하고싶어 ->이런메소드 만들어야겠지
+
+	//로딩,connection얻어오기	
+	getConnection();
+		
+	try {
 		
 		// 3. SQL문 준비 / 바인딩 / 실행
 		
@@ -63,28 +107,12 @@ public class AuthorDao {
 		// 4.결과처리
 		System.out.println(count + "건이 저장되었습니다.(작가)");
 		
-	} catch (ClassNotFoundException e) {
-		System.out.println("error: 드라이버 로딩 실패 - " + e);
 	} catch (SQLException e) {
 		System.out.println("error:" + e);
-	} finally {
+	} 
 		
-		// 5. 자원정리
-		try {
-		/*
-			if (rs != null) {
-			rs.close();
-			}*/ 
-			if (pstmt != null) {
-				pstmt.close();
-			}
-			if (conn != null) {
-				conn.close();
-			}
-		} catch (SQLException e) {
-		System.out.println("error:" + e);
-		}
-	}
+		this.close(); 
+	
 	
     }
    //여기까지 insert메소드	
@@ -92,17 +120,21 @@ public class AuthorDao {
 	
 	//작가삭제 delete
 	public void authorDelete(int authorId) {
-		
+		/*필드로 빼준 부분
 		// 0. import java.sql.*;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		//ResultSet rs = null;
+		//ResultSet rs = null;*/
+	getConnection();	
+		
 	try {
+		
+		/*getConnection으로 해결된 부분. try catch까지 다 된거라서..? try밖으로뺀다는
 		// 1. JDBC 드라이버 (Oracle) 로딩
 		Class.forName(driver);
 		
 		// 2. Connection 얻어오기
-		conn = DriverManager.getConnection(url, id, pw);
+		conn = DriverManager.getConnection(url, id, pw);*/
 
 		// 3. SQL문 준비 / 바인딩 / 실행
 		//문자열 만들기
@@ -123,17 +155,20 @@ public class AuthorDao {
 		// 4.결과처리
 		System.out.println(count + "건이 삭제되었습니다.(작가)");
 		
-	} catch (ClassNotFoundException e) {
-		System.out.println("error: 드라이버 로딩 실패 - " + e);
+	/*} catch (ClassNotFoundException e) {
+		System.out.println("error: 드라이버 로딩 실패 - " + e);*/
 	} catch (SQLException e) {
 		System.out.println("error:" + e);
-	} finally {
+	//} finally {
+			
+		close();	
+		/* close로 빼줌
 		// 5. 자원정리
 		try {
 			/*
 			if (rs != null) {
 			rs.close();
-			} */
+			} 
 			if (pstmt != null) {
 			pstmt.close();
 			}
@@ -142,7 +177,7 @@ public class AuthorDao {
 			}
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
-			}
+			}*/
 		}
 	
 		
@@ -153,16 +188,9 @@ public class AuthorDao {
 	//작가수정 update --이거 제대로 썼나 바인딩이랑 여기 괄호안 확인하기
 	public void authorUpdate(AuthorVo authorVo) {
 	
-		// 0. import java.sql.*;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		//ResultSet rs = null;
+		getConnection();
+		
 		try {
-		// 1. JDBC 드라이버 (Oracle) 로딩
-		Class.forName(driver);
-			
-		// 2. Connection 얻어오기
-		conn = DriverManager.getConnection(url, id, pw);
 		
 		// 3. SQL문 준비 / 바인딩 / 실행
 		//문자열 만들기. 오라클의 쿼리문 고대로 옮겨올려구
@@ -187,18 +215,18 @@ public class AuthorDao {
 		// 4.결과처리
         System.out.println(count + "건이 수정되었습니다.(작가)");
 			
-		} catch (ClassNotFoundException e) {
-		System.out.println("error: 드라이버 로딩 실패 - " + e);
+		
 		} catch (SQLException e) {
 		System.out.println("error:" + e);
-		} finally {
 		
+		close();
+		    /*
 			// 5. 자원정리
 			try {
 				/*
 				if (rs != null) {
 				rs.close();
-				} */
+				} 
 				if (pstmt != null) {
 					pstmt.close();
 					}
@@ -207,7 +235,7 @@ public class AuthorDao {
 					}
 				} catch (SQLException e) {
 					System.out.println("error:" + e);
-				}
+				}*/
 			}
 	}
 	//여기까지 update
@@ -215,19 +243,12 @@ public class AuthorDao {
 	
 	//작가 리스트 가져오기 select
 	public List<AuthorVo> authorSelect() { 
-		List<AuthorVo> authorList = new ArrayList<AuthorVo>();
+		   List<AuthorVo> authorList = new ArrayList<AuthorVo>();
 
-	// 0. import java.sql.*;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		   //로딩,connection 얻어오기
+		   getConnection();
 		
 		try {
-			// 1. JDBC 드라이버 (Oracle) 로딩
-			Class.forName(driver);
-			
-			// 2. Connection 얻어오기
-			conn = DriverManager.getConnection(url, id, pw);
 			
 			// 3. SQL문 준비 / 바인딩 / 실행
 			//문자열 만들기. --물음표가 없는 경우도 있을수있다. 이것처럼
@@ -258,27 +279,28 @@ public class AuthorDao {
 	        }
 	        
 				
-		} catch (ClassNotFoundException e) {
-			System.out.println("error: 드라이버 로딩 실패 - " + e);
+		/*} catch (ClassNotFoundException e) { getconnection에서 발생했던 예외기땜시 지워도됨 
+			System.out.println("error: 드라이버 로딩 실패 - " + e);*/
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
-		} finally {
 			
-				// 5. 자원정리
-				try {
+			// 5. 자원정리
+			close();
+			/*
+			try {
 					
-					if (rs != null) {
-					rs.close();
-					} 
-					if (pstmt != null) {
-						pstmt.close();
-						}
-					if (conn != null) {
-						conn.close();
-						}
-					} catch (SQLException e) {
-						System.out.println("error:" + e);
+				if (rs != null) {
+				rs.close();
+				} 
+				if (pstmt != null) {
+					pstmt.close();
 					}
+				if (conn != null) {
+					conn.close();
+					}
+				} catch (SQLException e) {
+					System.out.println("error:" + e);
+				}*/
 		}
 		  return authorList; //주소값 리턴해주기
 	}

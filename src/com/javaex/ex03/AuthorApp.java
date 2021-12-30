@@ -6,7 +6,7 @@ public class AuthorApp {
 
 	public static void main(String[] args) {
 
-		List<AuthorVo>list; //얘는 ..리스트를 만들건데 <AuthorVo>를 관리하고있는 리스트.
+		List<AuthorVo> list; //얘는 ..리스트를 만들건데 <AuthorVo>를 관리하고있는 리스트.
 		AuthorDao authorDao = new AuthorDao();
 		
 		//AuthorVo authorVo = new AuthorVo("이문열","경북 영양"); //이런 포맷의 생성자 필요해서 생성자 만들어주기로함
@@ -21,7 +21,7 @@ public class AuthorApp {
 		authorDao.authorInsert(vo03);
 		
 		System.out.println("--------------------------");
-		list = authorDao.authorSelect(); 
+		list = authorDao.authorSelect();
 	    for(int i=0; i<list.size(); i++) {
 	    	AuthorVo vo = list.get(i); //i번방의 주소를 vo에담음
 	    	System.out.println(vo.getAuthorId()+","+vo.getAuthorName()+","+vo.getAuthorDesc());
