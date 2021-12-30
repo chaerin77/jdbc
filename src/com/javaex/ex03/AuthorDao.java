@@ -48,7 +48,7 @@ public class AuthorDao {
 			pstmt = conn.prepareStatement(query);
 
 			// 바인딩
-			pstmt.setString(1, authorVo.getAuthorName()); // (1, "김영하") 여기 이제 getter로꺼내서써야함
+			pstmt.setString(1, authorVo.getAuthorName()); // (1, "김영하") 여기 이제 getter로 꺼내서 써야함
 			pstmt.setString(2, authorVo.getAuthorDesc());
 
 			// 실행
