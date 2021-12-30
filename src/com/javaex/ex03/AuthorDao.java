@@ -174,9 +174,7 @@ public class AuthorDao {
 
 			// 실행
 			int count = pstmt.executeUpdate();
-			// insert, update, delete => 데이터베이스 쿼리문 결과가 없어서 void 반환할게 없으므로.
-			// select => 1개든 여러개든 반환할게 생기니까 Object 반환해주는거고.
-
+		
 			// 4.결과처리
 			System.out.println(count + "건이 수정되었습니다.(작가)");
 
@@ -207,10 +205,6 @@ public class AuthorDao {
 	// 작가 리스트 가져오기 select
 	public List<AuthorVo> authorSelect() { // void였는데왜 return저걸로바꾼거지?
 		List<AuthorVo> authorList = new ArrayList<AuthorVo>();
-//		Char => 1
-//		String => 4? 8
-		// AuthorVo만 담기는 배열을 생성.( 동적 배열 );
-		// String[] | List<String>
 
 		// 0. import java.sql.*;
 		Connection conn = null;
@@ -250,9 +244,7 @@ public class AuthorDao {
 				String authorDesc = rs.getString("author_desc");
 
 				AuthorVo vo = new AuthorVo(authorId, authorName, authorDesc);//0x111...
-				// vo <- AuthorVo 의 주소값(데이터 베이스에서 뽑아온 데이터 중 1개의 row).
 				authorList.add(vo);
-				// authorList<vo, vo, vo, vo, vo, vo> ---> while 문이 끝날때 까지. 
 			}
 
 		} catch (ClassNotFoundException e) {
