@@ -1,6 +1,6 @@
 //Dao만들기, AuthorVo 사용하기,공통변수 빼기
 
-package com.javaex.ex04;
+package com.javaex.ex08;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -73,16 +73,11 @@ public class AuthorDao {
 	
 	public void authorInsert(AuthorVo authorVo) { 
 		
-		/*얘네 필드로빼기
-		// 0. import java.sql.*;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		//ResultSet rs = null;*/
 		
 		//getConnection(); //이걸 실행하면 1,2번(드라이버로딩/커넥션얻어오기)을 둘다 실행시키도록 하고싶어 ->이런메소드 만들어야겠지
 
 	//로딩,connection얻어오기	
-		getConnection();
+	getConnection();
 		
 	try {
 		
@@ -120,13 +115,8 @@ public class AuthorDao {
 	
 	//작가삭제 delete
 	public void authorDelete(int authorId) {
-		/*필드로 빼준 부분
-		// 0. import java.sql.*;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		//ResultSet rs = null;*/
-	
-		getConnection();	
+
+	getConnection();	
 		
 	try {
 		
@@ -156,30 +146,10 @@ public class AuthorDao {
 		// 4.결과처리
 		System.out.println(count + "건이 삭제되었습니다.(작가)");
 		
-	/*} catch (ClassNotFoundException e) {
-		System.out.println("error: 드라이버 로딩 실패 - " + e);*/
 	} catch (SQLException e) {
 		System.out.println("error:" + e);
-	} //finally {
-			
+	} 
 		close();	
-		/* close로 빼줌
-		// 5. 자원정리
-		try {
-			/*
-			if (rs != null) {
-			rs.close();
-			} 
-			if (pstmt != null) {
-			pstmt.close();
-			}
-			if (conn != null) {
-			conn.close();
-			}
-		} catch (SQLException e) {
-			System.out.println("error:" + e);
-			}*/
-			
 		
 	}
 	//여기까지 delete기능
@@ -221,23 +191,7 @@ public class AuthorDao {
 		}
 		
 		close();
-		    /*
-			// 5. 자원정리
-			try {
-				/*
-				if (rs != null) {
-				rs.close();
-				} 
-				if (pstmt != null) {
-					pstmt.close();
-					}
-				if (conn != null) {
-					conn.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("error:" + e);
-				}*/
-			
+		   
 	}
 	//여기까지 update
 	
@@ -280,29 +234,12 @@ public class AuthorDao {
 	        }
 	        
 				
-		/*} catch (ClassNotFoundException e) { getconnection에서 발생했던 예외기땜시 지워도됨 
-			System.out.println("error: 드라이버 로딩 실패 - " + e);*/
+		
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		}	
 			// 5. 자원정리
 			close();
-			/*
-			try {
-					
-				if (rs != null) {
-				rs.close();
-				} 
-				if (pstmt != null) {
-					pstmt.close();
-					}
-				if (conn != null) {
-					conn.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("error:" + e);
-				}*/
-		
 		  return authorList; //주소값 리턴해주기
 	}
 	

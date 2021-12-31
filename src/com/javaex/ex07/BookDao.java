@@ -1,5 +1,5 @@
 //Dao만들기 //getConnection getClose 정리해보기
-package com.javaex.ex06;
+package com.javaex.ex07;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +17,10 @@ public class BookDao {
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 
+	private String driver = "oracle.jdbc.driver.OracleDriver";
+	private String url = "jdbc:oracle:thin:@localhost:1521:xe";
+	private String id = "webdb";
+	private String password = "webdb";
 	// 생성자 -자동
 
 	// 메소드 g/s
@@ -27,11 +31,10 @@ public class BookDao {
 	private void getConnection() {
 	   try {	
 		   // 1. JDBC 드라이버 (Oracle) 로딩
-		   Class.forName("oracle.jdbc.driver.OracleDriver");
+		   Class.forName(driver);
 
 		   // 2. Connection 얻어오기
-		   String url = "jdbc:oracle:thin:@localhost:1521:xe";
-		   conn = DriverManager.getConnection(url, "webdb", "webdb");
+		   conn = DriverManager.getConnection(url, id, password);
 	
 	   } catch (ClassNotFoundException e) {
 		   System.out.println("error: 드라이버 로딩 실패 - " + e);
@@ -44,16 +47,16 @@ public class BookDao {
 	//자원정리 close
 	private void close() {
 		// 5. 자원정리
-				try {
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (conn != null) {
-						conn.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("error:" + e);
+			try {
+				if (pstmt != null) {
+					pstmt.close();
 				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("error:" + e);
+			}
 	}
 	
 	// 책정보 추가
@@ -90,8 +93,8 @@ public class BookDao {
 		} 
 			close();
 		
-
 	} /// 여기까지 insert
+	
 
 	// 책정보 삭제
 	public void bookDelete(int authorId) { // ()안의 값을 넣으면 , 작가번호를 넣으면 그 책정보가 지워지게끔
@@ -125,9 +128,9 @@ public class BookDao {
 			// 5. 자원정리
 			close();
 		
-
 	}// 여기까지 delete
 
+	
 	// 책정보 수정
 	public void bookUpdate(BookVo bookVo) {
 
